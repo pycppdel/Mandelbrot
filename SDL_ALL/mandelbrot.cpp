@@ -5,6 +5,8 @@
 #define window_x 100
 #define window_y 100
 
+Field FIELD(width, height, 1);
+
 void redraw(struct Display*);
 
 int main(){
@@ -16,6 +18,11 @@ int main(){
 
   manager.init("mandelbrot");
   manager.setDrawMethod(redraw);
+
+  std::pair<int, int>* p = new std::pair<int, int>(0, 0);
+
+
+
 
   //starting loop
 

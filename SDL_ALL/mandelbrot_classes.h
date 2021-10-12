@@ -4,10 +4,15 @@
 #include "utils.h"
 #include <iostream>
 #include <cstdint>
+#include <utility>
+#include <map>
 
+class ComplexNumber;
+class Color;
+class Field;
+class Mandelbrot;
 
 class ComplexNumber{
-
 
 public:
 
@@ -41,6 +46,23 @@ Color(uint8_t, uint8_t, uint8_t);
 };
 
 class Field{
+
+private:
+
+  int width, height, magnitude;
+
+public:
+  fieldmap field;
+  fieldmap squarefield;
+
+  Field();
+  Field(int, int, int);
+  ~Field();
+
+  std::pair<ComplexNumber*, Color*>* get(std::pair<int, int>*);
+
+  void draw(SDL_Renderer*);
+
 
 
 };
@@ -119,7 +141,70 @@ Color::Color(uint8_t a, uint8_t b, uint8_t c){
 }
 
 Color::~Color(){
-  
+
+}
+
+Field::Field(){
+
+
+}
+
+Field::Field(int w, int h, int m){
+
+  width = w;
+  height = h;
+  magnitude = m;
+
+
+  std::cout << &field;
+
+
+  for(int i=0;i<height;i++){
+
+    for(int g = 0;g< width;g++){
+
+      std::pair<int, int>* pos = new std::pair<int, int>(g, i);
+      ComplexNumber a(g, i);
+      Color color(0, 0, 0);
+      int* b = new int(8);
+
+      field[pos] = b;
+
+
+
+
+    }
+  }
+
+  std::pair<int, int>* pos = new std::pair<int, int>(4, 5);
+
+  std::cout << *(field[pos]);
+
+
+
+
+
+
+
+}
+
+std::pair<ComplexNumber*, Color*>*  Field::get(std::pair<int, int>* p){
+
+  return  NULL;
+
+}
+
+Field::~Field(){
+
+
+
+
+}
+
+void Field::draw(SDL_Renderer* r){
+
+
+
 }
 
 #endif
