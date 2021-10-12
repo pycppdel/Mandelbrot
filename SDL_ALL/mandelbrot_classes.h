@@ -6,13 +6,18 @@
 #include <cstdint>
 #include <utility>
 #include <map>
+#include <cmath>
 
 class ComplexNumber;
 class Color;
 class Field;
 class Mandelbrot;
+class ColorReg;
+
+bool compare(ComplexNumber&);
 
 typedef std::pair<ComplexNumber*, Color*> fieldname;
+typedef std::pair<long double, long double> scale;
 
 
 class ComplexNumber{
@@ -20,6 +25,7 @@ class ComplexNumber{
 public:
 
   long double real, imag;
+
 
   ComplexNumber();
   ComplexNumber(ComplexNumber&);
@@ -31,6 +37,9 @@ public:
   friend std::ostream& operator<<(std::ostream&, ComplexNumber&);
   ComplexNumber& operator=(ComplexNumber&);
   void square();
+
+  friend ComplexNumber& operator +(ComplexNumber&, ComplexNumber&);
+  friend bool operator<(ComplexNumber&, ComplexNumber&);
 
 
 };
@@ -55,9 +64,12 @@ private:
   int width, height, magnitude;
 
 
+
 public:
 
   fieldname **field;
+  scale xscale;
+  scale yscale;
 
   Field();
   Field(int, int, int);
@@ -67,8 +79,19 @@ public:
 
   fieldname* get(int, int);
   void setComplex(int, int, ComplexNumber*);
+  void setColor(int, int, Color*);
+
+  void calculateColors(ColorReg*);
 
 
+
+};
+
+class ColorReg{
+
+public:
+
+  Color colors[2] = {{0, 0, 0}, {0, 0, 255}};
 
 };
 
@@ -122,7 +145,7 @@ return (*back);
 
 std::ostream& operator<<(std::ostream& os, ComplexNumber& c){
 
-  std::cout << c.real << " " << c.imag;
+  std::cout << c.real << " " << c.imag << "\n";
   return os;
 
 }
@@ -162,6 +185,12 @@ Field::Field(int w, int h, int m){
 
   field = new fieldname*[height];
 
+  xscale.first = -2.0;
+  xscale.second = 2.0;
+
+  yscale.first = -2.0;
+  yscale.second = 2.0;
+
   for(int i=0;i<height;i++){
 
     field[i] = new fieldname[width];
@@ -169,12 +198,16 @@ Field::Field(int w, int h, int m){
 
   }
 
+  long double adif = xscale.second-xscale.first, bdif = yscale.second-yscale.first;
+
   for(int i=0;i<height;i++){
 
     for(int g=0;g<width;g++){
 
-      field[i][g].first = new ComplexNumber(0, 0);
+      field[i][g].first = new ComplexNumber(xscale.first+adif/width*g, yscale.first+bdif/height*i);
       field[i][g].second = new Color(0, 0, 0);
+
+
 
     }
   }
@@ -201,6 +234,19 @@ Field::~Field(){
 void Field::draw(SDL_Renderer* r){
 
 
+for(int a=0;a<height;a++){
+
+  for(int b=0;b<width;b++){
+
+    ComplexNumber* cn = field[a][b].first;
+    Color* cl = field[a][b].second;
+
+    SDL_SetRenderDrawColor(r, cl->r, cl->g, cl->b, 0);
+    SDL_RenderDrawPoint(r, a, b);
+
+
+  }
+}
 
 }
 
@@ -217,4 +263,60 @@ void Field::setComplex(int height, int width, ComplexNumber* number){
 
 }
 
+void Field::setColor(int height, int width, Color* c){
+
+  delete field[height][width].second;
+  field[height][width].second = c;
+
+
+
+}
+
+void Field::calculateColors(ColorReg* reg){
+
+  for(int i=0;i<height;i++){
+
+    for(int g=0;g<width;g++){
+
+      ComplexNumber complex = (*field[i][g].first);
+      ComplexNumber begin(complex.real, complex.imag);
+
+    for(int t=0;t<magnitude;t++){
+      complex.square();
+      complex = complex+begin;
+    }
+    ComplexNumber end(complex.real, complex.imag);
+    ComplexNumber diff(end.real-begin.real, end.imag-begin.imag);
+
+    if (diff.real > 1 || diff.real > 1){
+      setColor(i, g, new Color(reg->colors[1]));
+    }
+    else{
+      setColor(i, g, new Color(reg->colors[0]));
+    }
+
+
+
+
+
+    }
+  }
+
+}
+
+ComplexNumber& operator+(ComplexNumber&a, ComplexNumber& b){
+
+  ComplexNumber neu(a.real+b.real, a.imag+b.imag);
+  return neu;
+
+}
+
+bool operator<(ComplexNumber& a, ComplexNumber&b){
+
+  return false;
+}
+
+bool compare(ComplexNumber& a){
+return (a.real > 1 || a.imag > 1 || a.real < -1 || a.imag < 1);
+}
 #endif

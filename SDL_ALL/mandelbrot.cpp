@@ -5,9 +5,11 @@
 #define window_x 100
 #define window_y 100
 
-Field FIELD(width, height, 1);
+Field FIELD(width, height, 10);
 
 void redraw(struct Display*);
+
+ColorReg colorreg;
 
 int main(){
 
@@ -18,6 +20,13 @@ int main(){
 
   manager.init("mandelbrot");
   manager.setDrawMethod(redraw);
+
+  for(int i=0;i<height;i++){
+    for(int g = 0;g<width;g++){
+      FIELD.setColor(i, g, new Color(255, 0, 0));
+    }
+  }
+
   std::cout << (*FIELD.get(1, 3)->first);
 
 
@@ -39,6 +48,7 @@ int main(){
     }
 
     manager.draw();
+    FIELD.calculateColors(&colorreg);
   }
 
   manager.deinit();
@@ -50,7 +60,7 @@ void redraw(struct Display* display){
 
   SDL_Renderer* r = display->renderer;
   SDL_RenderClear(r);
-  SDL_SetRenderDrawColor(r, 0x00, 0x00, 0x00, 0x00);
+  FIELD.draw(r);
   SDL_RenderPresent(r);
 
 }
