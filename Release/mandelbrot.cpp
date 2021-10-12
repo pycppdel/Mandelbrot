@@ -1,7 +1,7 @@
 #include "mandelbrot_classes.h"
 
-#define width 800
-#define height 800
+#define width 1900
+#define height 1100
 #define window_x 100
 #define window_y 100
 

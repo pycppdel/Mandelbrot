@@ -4,7 +4,7 @@
 #define height 800
 #define window_x 100
 #define window_y 100
-#define precision 100
+#define precision 50
 
 Field FIELD(width, height, precision);
 
@@ -18,7 +18,8 @@ int main(int argc, char** argv){
   SDL_Rect windowrect = {window_x, window_y, width, height};
   SDL_MANAGER manager = SDL_MANAGER(&windowrect);
 
-
+  FIELD.setxscale(-2, 2);
+  FIELD.setyscale(-2, 2);
 
   std::cout << FIELD.xscale.first << "\n";
 
@@ -32,6 +33,8 @@ int main(int argc, char** argv){
     }
   }
 
+  int *m_x, *m_y;
+
 
 
   //starting loop
@@ -39,6 +42,8 @@ int main(int argc, char** argv){
   bool quit = false;
   SDL_Event e;
   struct Display* display = manager.getDisplay();
+
+  std::cout << "E";
 
   FIELD.calculateColors(&colorreg);
 
@@ -51,7 +56,10 @@ int main(int argc, char** argv){
       case  SDL_QUIT:
                     quit = true;
                     break;
+
+
     }
+
 
     manager.draw();
   }
