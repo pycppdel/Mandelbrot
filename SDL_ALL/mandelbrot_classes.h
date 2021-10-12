@@ -93,7 +93,7 @@ class ColorReg{
 
 public:
 
-  Color colors[2] = {{0, 0, 0}, {0, 0, 255}};
+  Color colors[2] = {{0, 0, 255}, {0, 0, 0}};
 
 };
 
@@ -290,7 +290,7 @@ void Field::calculateColors(ColorReg* reg){
     ComplexNumber end(complex.real, complex.imag);
     ComplexNumber diff(end.real-begin.real, end.imag-begin.imag);
 
-    if (diff.real > 1 || diff.imag > 1 || diff.real < -1 || diff.imag < -1){
+    if (diff.real < 1 || diff.imag < 1 || diff.real < -1 || diff.imag < -1){
       setColor(i, g, new Color(reg->colors[1]));
     }
     else{

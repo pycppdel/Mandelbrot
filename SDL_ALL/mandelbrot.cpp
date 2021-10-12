@@ -4,8 +4,9 @@
 #define height 800
 #define window_x 100
 #define window_y 100
+#define precision 100
 
-Field FIELD(width, height, 10);
+Field FIELD(width, height, precision);
 
 void redraw(struct Display*);
 
