@@ -12,6 +12,9 @@ class Color;
 class Field;
 class Mandelbrot;
 
+typedef std::pair<ComplexNumber*, Color*> fieldname;
+
+
 class ComplexNumber{
 
 public:
@@ -51,17 +54,19 @@ private:
 
   int width, height, magnitude;
 
+
 public:
-  fieldmap field;
-  fieldmap squarefield;
+
+  fieldname **field;
 
   Field();
   Field(int, int, int);
   ~Field();
 
-  std::pair<ComplexNumber*, Color*>* get(std::pair<int, int>*);
-
   void draw(SDL_Renderer*);
+
+  fieldname* get(int, int);
+  void setComplex(int, int, ComplexNumber*);
 
 
 
@@ -155,48 +160,40 @@ Field::Field(int w, int h, int m){
   height = h;
   magnitude = m;
 
-
-  std::cout << &field;
-
+  field = new fieldname*[height];
 
   for(int i=0;i<height;i++){
 
-    for(int g = 0;g< width;g++){
-
-      std::pair<int, int>* pos = new std::pair<int, int>(g, i);
-      ComplexNumber a(g, i);
-      Color color(0, 0, 0);
-      int* b = new int(8);
-
-      field[pos] = b;
+    field[i] = new fieldname[width];
 
 
+  }
 
+  for(int i=0;i<height;i++){
+
+    for(int g=0;g<width;g++){
+
+      field[i][g].first = new ComplexNumber(0, 0);
+      field[i][g].second = new Color(0, 0, 0);
 
     }
   }
 
-  std::pair<int, int>* pos = new std::pair<int, int>(4, 5);
-
-  std::cout << *(field[pos]);
-
-
-
-
-
-
 
 }
 
-std::pair<ComplexNumber*, Color*>*  Field::get(std::pair<int, int>* p){
 
-  return  NULL;
-
-}
 
 Field::~Field(){
 
 
+  for(int i=0;i<height;i++){
+
+    delete [] field[i];
+
+  }
+
+  delete [] field;
 
 
 }
@@ -204,6 +201,19 @@ Field::~Field(){
 void Field::draw(SDL_Renderer* r){
 
 
+
+}
+
+fieldname* Field::get(int a, int b){
+
+  return &(field[a][b]);
+
+}
+
+void Field::setComplex(int height, int width, ComplexNumber* number){
+
+  delete field[height][width].first;
+  field[height][width].first = number;
 
 }
 

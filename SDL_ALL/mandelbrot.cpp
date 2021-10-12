@@ -18,10 +18,7 @@ int main(){
 
   manager.init("mandelbrot");
   manager.setDrawMethod(redraw);
-
-  std::pair<int, int>* p = new std::pair<int, int>(0, 0);
-
-
+  std::cout << (*FIELD.get(1, 3)->first);
 
 
   //starting loop
