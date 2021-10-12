@@ -82,6 +82,8 @@ public:
   void setColor(int, int, Color*);
 
   void calculateColors(ColorReg*);
+  void setxscale(long double, long double);
+  void setyscale(long double, long double);
 
 
 
@@ -185,11 +187,11 @@ Field::Field(int w, int h, int m){
 
   field = new fieldname*[height];
 
-  xscale.first = -2.0;
-  xscale.second = 2.0;
+  xscale.first = -2;
+  xscale.second = 2;
 
-  yscale.first = -2.0;
-  yscale.second = 2.0;
+  yscale.first = -2;
+  yscale.second = 2;
 
   for(int i=0;i<height;i++){
 
@@ -304,6 +306,47 @@ void Field::calculateColors(ColorReg* reg){
 
 }
 
+void Field::setxscale(long double a, long double b){
+
+xscale.first = a;
+xscale.second = b;
+
+long double adif = xscale.second-xscale.first, bdif = yscale.second-yscale.first;
+
+for(int i=0;i<height;i++){
+
+  for(int g=0;g<width;g++){
+
+    setComplex(i, g, new ComplexNumber(yscale.first+bdif/height*i, xscale.first+adif/width*g));
+
+
+
+
+  }
+}
+
+}
+
+void Field::setyscale(long double a, long double b){
+  yscale.first = a;
+  yscale.second = b;
+
+  long double adif = xscale.second-xscale.first, bdif = yscale.second-yscale.first;
+
+  for(int i=0;i<height;i++){
+
+    for(int g=0;g<width;g++){
+
+      setComplex(i, g, new ComplexNumber(yscale.first+bdif/height*i, xscale.first+adif/width*g));
+
+
+
+
+    }
+  }
+}
+
+
 ComplexNumber& operator+(ComplexNumber&a, ComplexNumber& b){
 
   ComplexNumber neu(a.real+b.real, a.imag+b.imag);
@@ -319,4 +362,8 @@ bool operator<(ComplexNumber& a, ComplexNumber&b){
 bool compare(ComplexNumber& a){
 return (a.real > 1 || a.imag > 1 || a.real < -1 || a.imag < 1);
 }
+
+
+
+
 #endif

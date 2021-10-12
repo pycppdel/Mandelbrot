@@ -17,17 +17,10 @@ int main(int argc, char** argv){
   SDL_Rect windowrect = {window_x, window_y, width, height};
   SDL_MANAGER manager = SDL_MANAGER(&windowrect);
 
-  int xb, xe, yb, ye;
 
-  xb = (int)argv[1][0] - 48;
-  xe = (int)argv[2][0] - 48;
-  yb = (int)argv[3][0] - 48;
-  ye = (int)argv[4][0] - 48;
 
-  FIELD.xscale.first = (long double)xb;
   std::cout << FIELD.xscale.first << "\n";
 
-  std::cout << xb << "\n";
 
   manager.init("mandelbrot");
   manager.setDrawMethod(redraw);
@@ -38,7 +31,6 @@ int main(int argc, char** argv){
     }
   }
 
-  std::cout << (*FIELD.get(1, 3)->first);
 
 
   //starting loop
@@ -46,6 +38,8 @@ int main(int argc, char** argv){
   bool quit = false;
   SDL_Event e;
   struct Display* display = manager.getDisplay();
+
+  FIELD.calculateColors(&colorreg);
 
   while(!quit){
 
@@ -59,7 +53,6 @@ int main(int argc, char** argv){
     }
 
     manager.draw();
-    FIELD.calculateColors(&colorreg);
   }
 
   manager.deinit();
