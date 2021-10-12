@@ -204,7 +204,7 @@ Field::Field(int w, int h, int m){
 
     for(int g=0;g<width;g++){
 
-      field[i][g].first = new ComplexNumber(xscale.first+adif/width*g, yscale.first+bdif/height*i);
+      field[i][g].first = new ComplexNumber(yscale.first+bdif/height*i, xscale.first+adif/width*g);
       field[i][g].second = new Color(0, 0, 0);
 
 
@@ -288,7 +288,7 @@ void Field::calculateColors(ColorReg* reg){
     ComplexNumber end(complex.real, complex.imag);
     ComplexNumber diff(end.real-begin.real, end.imag-begin.imag);
 
-    if (diff.real > 1 || diff.real > 1){
+    if (diff.real > 1 || diff.imag > 1 || diff.real < -1 || diff.imag < -1){
       setColor(i, g, new Color(reg->colors[1]));
     }
     else{

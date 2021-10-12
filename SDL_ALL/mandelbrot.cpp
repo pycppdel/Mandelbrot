@@ -11,12 +11,23 @@ void redraw(struct Display*);
 
 ColorReg colorreg;
 
-int main(){
+int main(int argc, char** argv){
 
   //making screen
   SDL_Rect windowrect = {window_x, window_y, width, height};
   SDL_MANAGER manager = SDL_MANAGER(&windowrect);
 
+  int xb, xe, yb, ye;
+
+  xb = (int)argv[1][0] - 48;
+  xe = (int)argv[2][0] - 48;
+  yb = (int)argv[3][0] - 48;
+  ye = (int)argv[4][0] - 48;
+
+  FIELD.xscale.first = (long double)xb;
+  std::cout << FIELD.xscale.first << "\n";
+
+  std::cout << xb << "\n";
 
   manager.init("mandelbrot");
   manager.setDrawMethod(redraw);
